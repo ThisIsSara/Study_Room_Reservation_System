@@ -1,0 +1,2 @@
+-- Study Room Reservation System
+-- MySQL database schema will be added later.
