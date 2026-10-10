@@ -1,0 +1,2 @@
+<?php
+// Main PHP functions
