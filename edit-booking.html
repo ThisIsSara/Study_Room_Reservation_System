@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Booking - Study Rooms</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <header>
+        <nav class="navbar">
+
+            <div class="logo">
+                <span class="logo-icon">📖</span>
+                <span>Study Rooms</span>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="rooms.html">Rooms</a></li>
+                <li><a href="my-bookings.html" class="active">My Bookings</a></li>
+            </ul>
+
+            <div class="nav-buttons">
+                <a href="login.html" class="login-btn">Login</a>
+                <a href="register.html" class="register-btn">Register</a>
+            </div>
+
+        </nav>
+    </header>
+
+
+    <!-- Edit Booking Page -->
+    <main class="edit-booking-page">
+
+        <a href="my-bookings.html" class="back-link">
+            ← Back to My Bookings
+        </a>
+
+
+        <div class="edit-booking-container">
+
+            <!-- Booking Summary -->
+            <div class="edit-summary-card">
+
+                <img
+                    src="images/room-a1.jpg"
+                    alt="Room A1">
+
+                <div class="edit-summary-info">
+
+                    <p class="small-title">
+                        CURRENT BOOKING
+                    </p>
+
+                    <h1>Room A1</h1>
+
+                    <p>
+                        Library - 1st Floor
+                    </p>
+
+                    <div class="current-booking-info">
+
+                        <div>
+                            <span>Current Date</span>
+                            <strong>15 Oct 2026</strong>
+                        </div>
+
+                        <div>
+                            <span>Current Time</span>
+                            <strong>9:00 AM - 10:00 AM</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Edit Form -->
+            <div class="edit-form-card">
+
+                <p class="small-title">
+                    UPDATE RESERVATION
+                </p>
+
+                <h2>Edit Booking</h2>
+
+                <p class="edit-description">
+                    Choose a new date and one-hour time slot.
+                </p>
+
+
+                <form>
+
+                    <!-- Date -->
+                    <div class="booking-form-group">
+
+                        <label for="edit-date">
+                            Select New Date
+                        </label>
+
+                        <input
+                            type="date"
+                            id="edit-date"
+                            name="edit-date"
+                            required>
+
+                    </div>
+
+
+                    <!-- Time Slots -->
+                    <div class="booking-form-group">
+
+                        <label>
+                            Select New Time
+                        </label>
+
+                        <div class="time-slots">
+
+                            <label class="time-slot">
+                                <input
+                                    type="radio"
+                                    name="edit-time"
+                                    value="9-10">
+
+                                <span>
+                                    9:00 AM - 10:00 AM
+                                </span>
+                            </label>
+
+
+                            <label class="time-slot">
+                                <input
+                                    type="radio"
+                                    name="edit-time"
+                                    value="10-11">
+
+                                <span>
+                                    10:00 AM - 11:00 AM
+                                </span>
+                            </label>
+
+
+                            <label class="time-slot">
+                                <input
+                                    type="radio"
+                                    name="edit-time"
+                                    value="11-12">
+
+                                <span>
+                                    11:00 AM - 12:00 PM
+                                </span>
+                            </label>
+
+
+                            <label class="time-slot">
+                                <input
+                                    type="radio"
+                                    name="edit-time"
+                                    value="12-1">
+
+                                <span>
+                                    12:00 PM - 1:00 PM
+                                </span>
+                            </label>
+
+
+                            <label class="time-slot">
+                                <input
+                                    type="radio"
+                                    name="edit-time"
+                                    value="1-2">
+
+                                <span>
+                                    1:00 PM - 2:00 PM
+                                </span>
+                            </label>
+
+
+                            <label class="time-slot">
+                                <input
+                                    type="radio"
+                                    name="edit-time"
+                                    value="2-3">
+
+                                <span>
+                                    2:00 PM - 3:00 PM
+                                </span>
+                            </label>
+
+
+                            <label class="time-slot">
+                                <input
+                                    type="radio"
+                                    name="edit-time"
+                                    value="3-4">
+
+                                <span>
+                                    3:00 PM - 4:00 PM
+                                </span>
+                            </label>
+
+
+                            <label class="time-slot">
+                                <input
+                                    type="radio"
+                                    name="edit-time"
+                                    value="4-5">
+
+                                <span>
+                                    4:00 PM - 5:00 PM
+                                </span>
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="edit-note">
+                        You can edit or cancel your booking only before the reservation starts.
+                    </div>
+
+
+                    <div class="edit-buttons">
+
+                        <a href="my-bookings.html"
+                           class="cancel-edit-button">
+
+                            Cancel
+
+                        </a>
+
+                        <button
+                            type="submit"
+                            class="save-changes-button">
+
+                            Save Changes
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- Footer -->
+    <footer>
+
+        <div class="footer-content">
+
+            <div class="logo footer-logo">
+                <span>📖</span>
+                <span>Study Rooms</span>
+            </div>
+
+            <p>
+                University Study Room Reservation System
+            </p>
+
+        </div>
+
+    </footer>
+
+</body>
+
+</html>
