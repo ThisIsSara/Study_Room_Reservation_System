@@ -1,35 +1,45 @@
 document.addEventListener("DOMContentLoaded", function () {
     
-    // Validate registration form
+    // 1. Validation for Registration (register.html)
     const registerForm = document.querySelector(".register-box form");
     if (registerForm) {
         registerForm.addEventListener("submit", function (e) {
-            const email = document.getElementById("register-email").value;
-            const password = document.getElementById("register-password").value;
-            const confirmPassword = document.getElementById("confirm-password").value;
+            const emailInput = document.getElementById("register-email");
+            const passwordInput = document.getElementById("register-password");
+            const confirmPasswordInput = document.getElementById("confirm-password");
 
-            if (!email.includes("@")) {
+            // Check email format
+            if (!emailInput.value.includes("@")) {
                 alert("Please enter a valid email address.");
                 e.preventDefault();
-            } else if (password !== confirmPassword) {
-                alert("Passwords do not match!");
+                return;
+            }
+
+            // Check if passwords match
+            if (passwordInput.value !== confirmPasswordInput.value) {
+                alert("Passwords do not match! Please check again.");
                 e.preventDefault();
-            } else if (password.length < 6) {
-                alert("Password must be at least 6 characters.");
+                return;
+            }
+
+            // Password length check
+            if (passwordInput.value.length < 6) {
+                alert("Password must be at least 6 characters long.");
                 e.preventDefault();
+                return;
             }
         });
     }
 
-    // Validate login form
+    // 2. Validation for Login (login.html)
     const loginForm = document.querySelector(".login-box form");
     if (loginForm) {
         loginForm.addEventListener("submit", function (e) {
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
+            const emailInput = document.getElementById("email");
+            const passwordInput = document.getElementById("password");
 
-            if (!email.trim() || !password.trim()) {
-                alert("Please fill in all fields.");
+            if (emailInput.value.trim() === "" || passwordInput.value.trim() === "") {
+                alert("Please fill in both Email and Password fields.");
                 e.preventDefault();
             }
         });
