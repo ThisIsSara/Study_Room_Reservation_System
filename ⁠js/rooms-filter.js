@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const selectFilter = document.querySelector(".room-select");
     const roomCards = document.querySelectorAll(".room-list-card");
 
-    // Filter rooms by search text and capacity
     function filterRooms() {
         const query = searchInput ? searchInput.value.toLowerCase() : "";
         const selectedCapacity = selectFilter ? selectFilter.value : "";
@@ -16,7 +15,11 @@ document.addEventListener("DOMContentLoaded", function () {
             const matchesSearch = title.includes(query);
             const matchesCapacity = selectedCapacity === "" || capacityNumber === selectedCapacity;
 
-            card.style.display = (matchesSearch && matchesCapacity) ? "flex" : "none";
+            if (matchesSearch && matchesCapacity) {
+                card.style.display = "flex";
+            } else {
+                card.style.display = "none";
+            }
         });
     }
 
