@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (!selectedDate) return;
 
             // Send AJAX request to PHP backend
-            fetch(`php/check_availability.php?date=${selectedDate}`)
+            fetch(`php/check_availability.php?date=${encodeURIComponent(selectedDate)}&room=${encodeURIComponent(bookingForm.dataset.roomId)}`)
                 .then(response => response.json())
                 .then(bookedSlots => {
                     const timeSlots = document.querySelectorAll('input[name="time"], input[name="edit-time"]');
