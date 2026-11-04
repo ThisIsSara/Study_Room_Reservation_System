@@ -1,4 +1,17 @@
 document.addEventListener("DOMContentLoaded", function () {
+    const params = new URLSearchParams(window.location.search);
+    const messages = {
+        invalid: "Please check the information you entered.",
+        credentials: "Incorrect email or password.",
+        duplicate: "An account with this email already exists.",
+        database: "Could not connect to the database.",
+        login_required: "Please log in to continue."
+    };
+    const error = params.get("error");
+    if (error && messages[error]) alert(messages[error]);
+    if (params.get("registered") === "1") alert("Account created. You can now log in.");
+    if (params.get("logged_out") === "1") alert("You have logged out.");
+
     
     // 1. Validation for Registration (register.html)
     const registerForm = document.querySelector(".register-box form");
@@ -23,8 +36,8 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             // Password length check
-            if (passwordInput.value.length < 6) {
-                alert("Password must be at least 6 characters long.");
+            if (passwordInput.value.length < 8) {
+                alert("Password must be at least 8 characters long.");
                 e.preventDefault();
                 return;
             }
