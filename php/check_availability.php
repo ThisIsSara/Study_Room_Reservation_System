@@ -15,9 +15,16 @@ if (!is_string($date) || !is_string($room) || $room === '') {
 }
 
 $selectedDate = DateTimeImmutable::createFromFormat('!Y-m-d', $date);
-$today = new DateTimeImmutable('today', new DateTimeZone('Asia/Riyadh'));
+$today = new DateTimeImmutable(
+    'today',
+    new DateTimeZone('Asia/Riyadh')
+);
 
-if (!$selectedDate || $selectedDate->format('Y-m-d') !== $date || $selectedDate < $today) {
+if (
+    !$selectedDate ||
+    $selectedDate->format('Y-m-d') !== $date ||
+    $selectedDate < $today
+) {
     http_response_code(400);
     echo json_encode(['error' => 'Invalid date']);
     exit;
@@ -46,14 +53,26 @@ try {
             $start = sprintf('%02d:00:00', $hour);
             $end = sprintf('%02d:00:00', $hour + 1);
 
-            if ($booking['start_time'] < $end &&
-                $booking['end_time'] > $start) {
-                $bookedSlots[] = $hour . '-' . ($hour + 1);
+            if (
+                $booking['start_time'] < $end &&
+                $booking['end_time'] > $start
+            ) {
+                $displayStart = $hour > 12
+                    ? $hour - 12
+                    : $hour;
+
+                $displayEnd = ($hour + 1) > 12
+                    ? ($hour + 1) - 12
+                    : ($hour + 1);
+
+                $bookedSlots[] = $displayStart . '-' . $displayEnd;
             }
         }
     }
 
-    echo json_encode(array_values(array_unique($bookedSlots)));
+    echo json_encode(
+        array_values(array_unique($bookedSlots))
+    );
 
 } catch (PDOException $e) {
     http_response_code(500);
