@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Register - Study Rooms</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+<script src="js/auth.js"></script>
+
+    <!-- Navigation Bar -->
+    <header>
+        <nav class="navbar">
+
+            <div class="logo">
+                <span class="logo-icon">📖</span>
+                <span>Study Rooms</span>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="rooms.html">Rooms</a></li>
+                <li><a href="my-bookings.php">My Bookings</a></li>
+            </ul>
+
+            <div class="nav-buttons">
+
+                <a href="login.html" class="login-btn">
+                    Login
+                </a>
+
+                <a href="register.html"
+                   class="register-btn">
+                    Register
+                </a>
+
+            </div>
+
+        </nav>
+    </header>
+
+
+    <!-- Register Section -->
+    <main class="register-page">
+
+        <div class="register-container">
+
+            <!-- Register Form -->
+            <div class="register-form-area">
+
+                <div class="register-box">
+
+                    <p class="small-title">
+                        JOIN US
+                    </p>
+
+                    <h1>Create an Account</h1>
+
+                    <p class="register-subtitle">
+                        Create your account to start booking study rooms.
+                    </p>
+
+
+                    <form action="php/register.php" method="post">
+
+                        <div class="form-group">
+
+                            <label for="fullname">
+                                Full Name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="fullname"
+                                name="fullname"
+                                placeholder="Enter your full name"
+                                required>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="register-email">
+                                Email Address
+                            </label>
+
+                            <input
+                                type="email"
+                                id="register-email"
+                                name="email"
+                                placeholder="student@university.edu"
+                                required>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="register-password">
+                                Password
+                            </label>
+
+                            <input
+                                type="password"
+                                id="register-password"
+                                name="password"
+                                placeholder="Create a password"
+                                required>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="confirm-password">
+                                Confirm Password
+                            </label>
+
+                            <input
+                                type="password"
+                                id="confirm-password"
+                                name="confirm-password"
+                                placeholder="Confirm your password"
+                                required>
+
+                        </div>
+
+
+                        <button type="submit"
+                                class="register-submit">
+
+                            Create Account
+
+                        </button>
+
+                    </form>
+
+
+                    <p class="login-link">
+
+                        Already have an account?
+
+                        <a href="login.html">
+                            Login
+                        </a>
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Image Side -->
+            <div class="register-image">
+
+                <div class="image-text">
+
+                    <p>YOUR SPACE</p>
+
+                    <h2>
+                        Your Time.
+                        <br>
+                        Your Focus.
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- Footer -->
+    <footer>
+
+        <div class="footer-content">
+
+            <div class="logo footer-logo">
+                <span>📖</span>
+                <span>Study Rooms</span>
+            </div>
+
+            <p>
+                University Study Room Reservation System
+            </p>
+
+        </div>
+
+    </footer>
+
+    <script src="js/session-ui.js"></script>
+</body>
+
+</html>

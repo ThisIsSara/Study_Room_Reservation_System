@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login - Study Rooms</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <script src="js/auth.js"></script>
+
+
+    <!-- Navigation Bar -->
+    <header>
+        <nav class="navbar">
+
+            <div class="logo">
+                <span class="logo-icon">📖</span>
+                <span>Study Rooms</span>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="rooms.html">Rooms</a></li>
+                <li><a href="my-bookings.php">My Bookings</a></li>
+            </ul>
+
+            <div class="nav-buttons">
+                <a href="login.html" class="login-btn active-button">
+                    Login
+                </a>
+
+                <a href="register.html" class="register-btn">
+                    Register
+                </a>
+            </div>
+
+        </nav>
+    </header>
+
+
+    <!-- Login Section -->
+    <main class="login-page">
+
+        <div class="login-container">
+
+            <!-- Login Form -->
+            <div class="login-form-area">
+
+                <div class="login-box">
+
+                    <p class="small-title">
+                        WELCOME BACK
+                    </p>
+
+                    <h1>Login</h1>
+
+                    <p class="login-subtitle">
+                        Log in to continue to your account.
+                    </p>
+
+
+                    <form action="php/login.php" method="post">
+
+                        <div class="form-group">
+                            <label for="email">
+                                Email Address
+                            </label>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="student@university.edu"
+                                required>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="password">
+                                Password
+                            </label>
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Enter your password"
+                                required>
+                        </div>
+
+
+                        <div class="login-options">
+
+                            <label class="remember">
+                                <input type="checkbox">
+                                Remember me
+                            </label>
+
+                            <a href="#" class="forgot-password">
+                                Forgot password?
+                            </a>
+
+                        </div>
+
+
+                        <button type="submit" class="login-submit">
+                            Login
+                        </button>
+
+                    </form>
+
+
+                    <p class="register-link">
+
+                        Don't have an account?
+
+                        <a href="register.html">
+                            Register
+                        </a>
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Image Side -->
+            <div class="login-image">
+
+                <div class="image-text">
+                    <p>GOOD IDEAS</p>
+
+                    <h2>
+                        Start
+                        <br>
+                        Here.
+                    </h2>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- Footer -->
+    <footer>
+
+        <div class="footer-content">
+
+            <div class="logo footer-logo">
+                <span>📖</span>
+                <span>Study Rooms</span>
+            </div>
+
+            <p>
+                University Study Room Reservation System
+            </p>
+
+        </div>
+
+    </footer>
+
+    <script src="js/session-ui.js"></script>
+</body>
+
+</html>
