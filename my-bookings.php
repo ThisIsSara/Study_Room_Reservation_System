@@ -1,214 +1,251 @@
 <?php
+declare(strict_types=1);
+
 require_once __DIR__ . '/php/auth.php';
-if (currentUser() === null) {
+
+$user = currentUser();
+
+if ($user === null) {
     header('Location: login.html?error=login_required');
     exit;
+}
+
+date_default_timezone_set('Asia/Riyadh');
+
+function escape(string $value): string {
+    return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+}
+
+try {
+    $db = database();
+
+    $stmt = $db->prepare("
+        SELECT
+            b.id,
+            b.booking_date,
+            b.start_time,
+            b.end_time,
+            r.room_name,
+            r.location
+        FROM bookings b
+        JOIN rooms r ON b.room_id = r.id
+        WHERE b.user_id = ?
+          AND b.status = 'confirmed'
+          AND TIMESTAMP(b.booking_date, b.end_time) > ?
+        ORDER BY b.booking_date ASC, b.start_time ASC
+    ");
+
+    $stmt->execute([
+        $user['id'],
+        date('Y-m-d H:i:s')
+    ]);
+
+    $bookings = $stmt->fetchAll();
+
+} catch (PDOException $e) {
+    error_log('My bookings error: ' . $e->getMessage());
+    http_response_code(500);
+    exit('Unable to load bookings. Please try again.');
 }
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>My Bookings - Study Rooms</title>
-
     <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
-<script src="js/my-bookings.js"></script>
 
-    <!-- Navigation Bar -->
-    <header>
-        <nav class="navbar">
+<header>
+    <nav class="navbar">
+        <div class="logo">
+            <span class="logo-icon">📖</span>
+            <span>Study Rooms</span>
+        </div>
 
-            <div class="logo">
-                <span class="logo-icon">📖</span>
-                <span>Study Rooms</span>
-            </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="rooms.html">Rooms</a></li>
+            <li>
+                <a href="my-bookings.php" class="active">
+                    My Bookings
+                </a>
+            </li>
+        </ul>
 
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="rooms.html">Rooms</a></li>
-                <li><a href="my-bookings.php" class="active">My Bookings</a></li>
-            </ul>
+        <div class="nav-buttons">
+            <a href="login.html" class="login-btn">Login</a>
+            <a href="register.html" class="register-btn">
+                Register
+            </a>
+        </div>
+    </nav>
+</header>
 
-            <div class="nav-buttons">
-                <a href="login.html" class="login-btn">Login</a>
-                <a href="register.html" class="register-btn">Register</a>
-            </div>
+<main class="my-bookings-page">
 
-        </nav>
-    </header>
+    <section class="my-bookings-header">
+        <p class="small-title">YOUR RESERVATIONS</p>
+        <h1>My Bookings</h1>
+        <p>
+            View and manage your upcoming study room reservations.
+        </p>
+    </section>
 
+    <?php if (empty($bookings)): ?>
 
-    <!-- My Bookings -->
-    <main class="my-bookings-page">
-
-        <section class="my-bookings-header">
-
-            <p class="small-title">
-                YOUR RESERVATIONS
-            </p>
-
-            <h1>My Bookings</h1>
-
-            <p>
-                View and manage your upcoming study room reservations.
-            </p>
-
-        </section>
-
-
-        <!-- Booking 1 -->
         <div class="booking-item">
-
-            <img
-                src="images/room-a1.jpg"
-                alt="Room A1">
-
             <div class="booking-item-info">
-
-                <div class="booking-item-top">
-
-                    <div>
-                        <h2>Room A1</h2>
-                        <p>Library - 1st Floor</p>
-                    </div>
-
-                    <span class="booking-status">
-                        Upcoming
-                    </span>
-
-                </div>
-
-
-                <div class="booking-details-row">
-
-                    <div>
-                        <span>Date</span>
-                        <strong>15 Oct 2026</strong>
-                    </div>
-
-                    <div>
-                        <span>Time</span>
-                        <strong>9:00 AM - 10:00 AM</strong>
-                    </div>
-
-                    <div>
-                        <span>Duration</span>
-                        <strong>1 Hour</strong>
-                    </div>
-
-                </div>
-
-
-                <div class="booking-actions">
-
-                    <a href="edit-booking.php"
-                       class="edit-booking-btn">
-
-                        Edit
-
-                    </a>
-
-                    <button class="cancel-booking-btn">
-                        Cancel
-                    </button>
-
-                </div>
-
+                <h2>No Upcoming Bookings</h2>
+                <p>
+                    You have no upcoming reservations.
+                </p>
+                <a href="rooms.html" class="edit-booking-btn">
+                    Browse Rooms
+                </a>
             </div>
-
         </div>
 
+    <?php else: ?>
 
-        <!-- Booking 2 -->
-        <div class="booking-item">
+        <?php foreach ($bookings as $booking): ?>
+            <?php
+                $roomName = $booking['room_name'];
 
-            <img
-                src="images/room-b2.jpg"
-                alt="Room B2">
+                $imageName = strtolower($roomName);
+                $allowedImages = [
+                    'a1', 'a2', 'b1',
+                    'b2', 'c1', 'c2'
+                ];
 
-            <div class="booking-item-info">
+                if (!in_array($imageName, $allowedImages, true)) {
+                    $imageName = 'a1';
+                }
 
-                <div class="booking-item-top">
+                $image = "images/room-" . $imageName . ".jpg";
 
-                    <div>
-                        <h2>Room B2</h2>
-                        <p>Library - 2nd Floor</p>
+                $date = date(
+                    'd M Y',
+                    strtotime($booking['booking_date'])
+                );
+
+                $start = date(
+                    'g:i A',
+                    strtotime($booking['start_time'])
+                );
+
+                $end = date(
+                    'g:i A',
+                    strtotime($booking['end_time'])
+                );
+
+                $startTimestamp = strtotime(
+                    $booking['booking_date'] . ' ' .
+                    $booking['start_time']
+                );
+
+                $endTimestamp = strtotime(
+                    $booking['booking_date'] . ' ' .
+                    $booking['end_time']
+                );
+
+                $duration = ($endTimestamp - $startTimestamp) / 3600;
+            ?>
+
+            <div class="booking-item">
+
+                <img
+                    src="<?= escape($image) ?>"
+                    alt="Room <?= escape($roomName) ?>"
+                >
+
+                <div class="booking-item-info">
+
+                    <div class="booking-item-top">
+                        <div>
+                            <h2>
+                                Room <?= escape($roomName) ?>
+                            </h2>
+                            <p>
+                                <?= escape($booking['location']) ?>
+                            </p>
+                        </div>
+
+                        <span class="booking-status">
+                            Upcoming
+                        </span>
                     </div>
 
-                    <span class="booking-status">
-                        Upcoming
-                    </span>
+                    <div class="booking-details-row">
+
+                        <div>
+                            <span>Date</span>
+                            <strong><?= escape($date) ?></strong>
+                        </div>
+
+                        <div>
+                            <span>Time</span>
+                            <strong>
+                                <?= escape($start) ?> -
+                                <?= escape($end) ?>
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>Duration</span>
+                            <strong>
+                                <?= escape((string)$duration) ?>
+                                Hour(s)
+                            </strong>
+                        </div>
+
+                    </div>
+
+                    <div class="booking-actions">
+                        <button
+                            type="button"
+                            class="edit-booking-btn"
+                            disabled
+                            title="Editing will be available soon"
+                        >
+                            Edit
+                        </button>
+
+                        <button
+                            type="button"
+                            class="cancel-booking-btn"
+                            disabled
+                            title="Cancellation will be available soon"
+                        >
+                            Cancel
+                        </button>
+                    </div>
 
                 </div>
-
-
-                <div class="booking-details-row">
-
-                    <div>
-                        <span>Date</span>
-                        <strong>20 Oct 2026</strong>
-                    </div>
-
-                    <div>
-                        <span>Time</span>
-                        <strong>2:00 PM - 3:00 PM</strong>
-                    </div>
-
-                    <div>
-                        <span>Duration</span>
-                        <strong>1 Hour</strong>
-                    </div>
-
-                </div>
-
-
-                <div class="booking-actions">
-
-                    <a href="edit-booking.php"
-                       class="edit-booking-btn">
-
-                        Edit
-
-                    </a>
-
-                    <button class="cancel-booking-btn">
-                        Cancel
-                    </button>
-
-                </div>
-
             </div>
 
+        <?php endforeach; ?>
+
+    <?php endif; ?>
+
+</main>
+
+<footer>
+    <div class="footer-content">
+        <div class="logo footer-logo">
+            <span>📖</span>
+            <span>Study Rooms</span>
         </div>
 
-    </main>
+        <p>
+            University Study Room Reservation System
+        </p>
+    </div>
+</footer>
 
+<script src="js/session-ui.js"></script>
 
-    <!-- Footer -->
-    <footer>
-
-        <div class="footer-content">
-
-            <div class="logo footer-logo">
-                <span>📖</span>
-                <span>Study Rooms</span>
-            </div>
-
-            <p>
-                University Study Room Reservation System
-            </p>
-
-        </div>
-
-    </footer>
-
-    <script src="js/session-ui.js"></script>
 </body>
-
 </html>
