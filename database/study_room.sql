@@ -1,3 +1,5 @@
+-- Initial database setup only. This script drops existing tables and their data.
+-- Do not import it again into a database containing active accounts or bookings.
 
 CREATE DATABASE IF NOT EXISTS study_room
 CHARACTER SET utf8mb4
