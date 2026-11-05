@@ -12,13 +12,24 @@ if ($user === null) {
 
 date_default_timezone_set('Asia/Riyadh');
 
-function escape(string $value): string {
-    return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+// Generate a CSRF token for secure cancellation.
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+function escape(string $value): string
+{
+    return htmlspecialchars(
+        $value,
+        ENT_QUOTES,
+        'UTF-8'
+    );
 }
 
 try {
     $db = database();
 
+    // Get confirmed upcoming bookings for this user.
     $stmt = $db->prepare("
         SELECT
             b.id,
@@ -44,6 +55,7 @@ try {
 
 } catch (PDOException $e) {
     error_log('My bookings error: ' . $e->getMessage());
+
     http_response_code(500);
     exit('Unable to load bookings. Please try again.');
 }
@@ -56,18 +68,26 @@ try {
     <title>My Bookings - Study Rooms</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
 <header>
     <nav class="navbar">
+
         <div class="logo">
             <span class="logo-icon">📖</span>
             <span>Study Rooms</span>
         </div>
 
         <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="rooms.html">Rooms</a></li>
+            <li>
+                <a href="index.html">Home</a>
+            </li>
+
+            <li>
+                <a href="rooms.html">Rooms</a>
+            </li>
+
             <li>
                 <a href="my-bookings.php" class="active">
                     My Bookings
@@ -76,19 +96,27 @@ try {
         </ul>
 
         <div class="nav-buttons">
-            <a href="login.html" class="login-btn">Login</a>
+            <a href="login.html" class="login-btn">
+                Login
+            </a>
+
             <a href="register.html" class="register-btn">
                 Register
             </a>
         </div>
+
     </nav>
 </header>
 
 <main class="my-bookings-page">
 
     <section class="my-bookings-header">
-        <p class="small-title">YOUR RESERVATIONS</p>
+        <p class="small-title">
+            YOUR RESERVATIONS
+        </p>
+
         <h1>My Bookings</h1>
+
         <p>
             View and manage your upcoming study room reservations.
         </p>
@@ -98,29 +126,39 @@ try {
 
         <div class="booking-item">
             <div class="booking-item-info">
+
                 <h2>No Upcoming Bookings</h2>
+
                 <p>
                     You have no upcoming reservations.
                 </p>
+
                 <a href="rooms.html" class="edit-booking-btn">
                     Browse Rooms
                 </a>
+
             </div>
         </div>
 
     <?php else: ?>
 
         <?php foreach ($bookings as $booking): ?>
+
             <?php
                 $roomName = $booking['room_name'];
 
                 $imageName = strtolower($roomName);
+
                 $allowedImages = [
                     'a1', 'a2', 'b1',
                     'b2', 'c1', 'c2'
                 ];
 
-                if (!in_array($imageName, $allowedImages, true)) {
+                if (!in_array(
+                    $imageName,
+                    $allowedImages,
+                    true
+                )) {
                     $imageName = 'a1';
                 }
 
@@ -151,7 +189,13 @@ try {
                     $booking['end_time']
                 );
 
-                $duration = ($endTimestamp - $startTimestamp) / 3600;
+                $duration = (
+                    $endTimestamp - $startTimestamp
+                ) / 3600;
+
+                $durationText = $duration == 1
+                    ? '1 Hour'
+                    : $duration . ' Hours';
             ?>
 
             <div class="booking-item">
@@ -164,10 +208,12 @@ try {
                 <div class="booking-item-info">
 
                     <div class="booking-item-top">
+
                         <div>
                             <h2>
                                 Room <?= escape($roomName) ?>
                             </h2>
+
                             <p>
                                 <?= escape($booking['location']) ?>
                             </p>
@@ -176,17 +222,22 @@ try {
                         <span class="booking-status">
                             Upcoming
                         </span>
+
                     </div>
 
                     <div class="booking-details-row">
 
                         <div>
                             <span>Date</span>
-                            <strong><?= escape($date) ?></strong>
+
+                            <strong>
+                                <?= escape($date) ?>
+                            </strong>
                         </div>
 
                         <div>
                             <span>Time</span>
+
                             <strong>
                                 <?= escape($start) ?> -
                                 <?= escape($end) ?>
@@ -195,15 +246,16 @@ try {
 
                         <div>
                             <span>Duration</span>
+
                             <strong>
-                                <?= escape((string)$duration) ?>
-                                Hour(s)
+                                <?= escape($durationText) ?>
                             </strong>
                         </div>
 
                     </div>
 
                     <div class="booking-actions">
+
                         <button
                             type="button"
                             class="edit-booking-btn"
@@ -213,17 +265,38 @@ try {
                             Edit
                         </button>
 
-                        <button
-                            type="button"
-                            class="cancel-booking-btn"
-                            disabled
-                            title="Cancellation will be available soon"
+                        <form
+                            action="php/cancel_booking.php"
+                            method="POST"
+                            style="display: inline;"
+                            onsubmit="return confirm('Are you sure you want to cancel this booking?');"
                         >
-                            Cancel
-                        </button>
+
+                            <input
+                                type="hidden"
+                                name="booking_id"
+                                value="<?= (int)$booking['id'] ?>"
+                            >
+
+                            <input
+                                type="hidden"
+                                name="csrf_token"
+                                value="<?= escape($_SESSION['csrf_token']) ?>"
+                            >
+
+                            <button
+                                type="submit"
+                                class="cancel-booking-btn"
+                            >
+                                Cancel
+                            </button>
+
+                        </form>
+
                     </div>
 
                 </div>
+
             </div>
 
         <?php endforeach; ?>
@@ -234,6 +307,7 @@ try {
 
 <footer>
     <div class="footer-content">
+
         <div class="logo footer-logo">
             <span>📖</span>
             <span>Study Rooms</span>
@@ -242,10 +316,32 @@ try {
         <p>
             University Study Room Reservation System
         </p>
+
     </div>
 </footer>
 
 <script src="js/session-ui.js"></script>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+
+if (params.get('cancelled') === '1') {
+    alert('Booking cancelled successfully!');
+}
+
+if (params.get('error') === 'not_found') {
+    alert('Booking could not be cancelled.');
+}
+
+// Remove query parameters after displaying the message.
+if (params.has('cancelled') || params.has('error')) {
+    window.history.replaceState(
+        {},
+        document.title,
+        window.location.pathname
+    );
+}
+</script>
 
 </body>
 </html>
