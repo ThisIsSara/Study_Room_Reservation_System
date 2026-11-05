@@ -1,4 +1,3 @@
 <?php
-// Study Room Reservation System
-// Home page
-?>
+header('Location: index.html');
+exit;
